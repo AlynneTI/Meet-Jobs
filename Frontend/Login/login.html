@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style.css" class="style" />
+    <link rel="shortcut icon" href="../assets/logo.png" type="image/x-icon" />
+    <title>Página de Login</title>
+  </head>
+
+  <body>
+    <div class="fundo-login">
+      <div class="card-login">
+        <div class="logo-login">
+          <a href="index.html"><img src="../assets/logo.png" alt="Logo" /></a>
+          <h3>MEET JOBS</h3>
+        </div>
+        <form
+          id="loginForm"
+          class="form-login"
+          onsubmit="realizar(); return false;"
+        >
+          <div class="input-login">
+            <input
+              type="email"
+              placeholder="EMAIL"
+              id="login_email"
+              name="email"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Digite sua senha"
+              id="login_senha"
+              name="senha"
+              required
+            />
+          </div>
+          <div class="btn-login-cadastro">
+            <div>
+              <button class="btn-login" type="submit">ENTRAR</button>
+            </div>
+            <div class="login-cadastro">
+              <p>Não possui cadastro?</p>
+              <a href="../Cadastro/escolha_cadastro.html"
+                ><button class="btn-cadastro" type="button">
+                  CADASTRE-SE
+                </button></a
+              >
+            </div>
+          </div>
+        </form>
+        <p id="responseMessage"></p> <!-- Para mostrar mensagens de erro ou sucesso -->
+      </div>
+    </div>
+
+    <script>
+      async function realizar() {
+        const email = document.getElementById('login_email').value;
+        const senha = document.getElementById('login_senha').value;
+
+        const response = await fetch('http://localhost:3000/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password: senha }),
+        });
+
+        const result = await response.json();
+
+        const responseMessage = document.getElementById('responseMessage');
+        if (result.msg === "Autenticação realizada com sucesso!") {
+          responseMessage.innerText = result.msg;
+          responseMessage.style.color = 'green';
+          // Salva o token no localStorage e redireciona
+          localStorage.setItem('authToken', result.token);
+          window.location.href = '../Home/index.html';
+; // Redireciona para a página principal
+        } else { 
+          responseMessage.innerText = result.msg;
+          responseMessage.style.color = 'red';
+        }
+      }
+    </script>
+  </body>
+</html>
+node app.js
